@@ -1,40 +1,38 @@
 ﻿using RestWithASPNET9Jorge.Interfaces;
 using RestWithASPNET9Jorge.Model;
-using RestWithASPNET9Jorge.Model.Context;
-using System;
+using RestWithASPNET9Jorge.Repositories;
 
 namespace RestWithASPNET9Jorge.Services;
 
 public class PersonService : IPersonService
 {
-    private readonly MSSQLContext _context;
-    public PersonService(MSSQLContext context)
+    private readonly IPersonRepository _repository;
+    public PersonService(IPersonRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
     public List<Person> FindAll()
     {
-        var persons = _context.Persons.ToList();
+        var persons = _repository.FindAll();
         return persons;
     }
     public Person FindById(long id)
     {
-        var person = _context.Persons.Find(id);
+        var person = _repository.FindById(id);
         return person;
     }
 
     public Person Create(Person person)
     {
-        _context.Add(person);
-        _context.SaveChanges();
-        return person;
+       var createdPerson = _repository.Create(person);
+        return createdPerson;
     }
 
     public void Delete(long id)
     {
         try
         {
-            var existingPerson = _context.Persons.Find(id);
+            var existingPerson = _repository.FindById(id);
 
             if (existingPerson == null)
             {
@@ -42,8 +40,7 @@ public class PersonService : IPersonService
             }
             else
             {
-                _context.Remove(existingPerson);
-                _context.SaveChanges();
+                _repository.Delete(id);
                 return ;
             }
         }
@@ -59,15 +56,14 @@ public class PersonService : IPersonService
     {
         try
         {
-            var existingPerson = _context.Persons.Find(person.Id);
+            var existingPerson = _repository.FindById(person.Id);
             if (existingPerson == null)
             {
                 return null;
             }
             else
             {
-                _context.Entry(existingPerson).CurrentValues.SetValues(person);
-                _context.SaveChanges();
+                 _repository.Update(person);
                 return person;
             }
 

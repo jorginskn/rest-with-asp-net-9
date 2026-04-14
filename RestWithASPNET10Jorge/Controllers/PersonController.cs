@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestWithASPNET9Jorge.Interfaces;
 using RestWithASPNET9Jorge.Model;
-using RestWithASPNET9Jorge.Services;
-using System;
 
 namespace RestWithASPNET9Jorge.Controllers;
 
@@ -21,13 +19,14 @@ public class PersonController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        _logger.LogInformation("Buscando todas as pessoas");
+        _logger.LogInformation("Buscando todas as pessoas!");
         var persons = _personService.FindAll();
         if(persons == null)
         {
-            _logger.LogInformation("Nenhuma pessoa foi encontrada");
+            _logger.LogInformation("Nenhuma pessoa foi encontrada!");
             NotFound();
         }
+        _logger.LogInformation("Pessoas foram encontradas!");
 
         return Ok(persons);
     }
@@ -44,6 +43,8 @@ public class PersonController : ControllerBase
 
             return NotFound();
         }
+        _logger.LogInformation("Pessoa com ID: {id} foi encontrada!",id);
+
         return Ok(person);
     }
 
@@ -59,6 +60,7 @@ public class PersonController : ControllerBase
         _logger.LogInformation("Criando nova pessoa: {@person}", person);
 
         var createdPerson = _personService.Create(person);
+        _logger.LogInformation("Nova pessoa: {@person} criada com sucesso!", person);
 
         return CreatedAtAction(nameof(GetById), new { id = createdPerson.Id }, createdPerson);
     }
@@ -72,7 +74,7 @@ public class PersonController : ControllerBase
         {
             return BadRequest();
         }
-        _logger.LogInformation(" dados da pessoa: {person} atualizados com sucesso!", person);
+        _logger.LogInformation("dados da pessoa: {person} atualizados com sucesso!", person);
 
         return Ok();
     }

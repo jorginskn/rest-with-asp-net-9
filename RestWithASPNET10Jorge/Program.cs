@@ -1,5 +1,6 @@
-using RestWithASPNET9Jorge.Configurations;
+﻿using RestWithASPNET9Jorge.Configurations;
 using RestWithASPNET9Jorge.Interfaces;
+using RestWithASPNET9Jorge.Repositories;
 using RestWithASPNET9Jorge.Services;
 using System.Text.Json;
 
@@ -13,8 +14,8 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 
-builder.Services.AddControllers();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.AddSeriloggerConfiguration();
 var app = builder.Build();
